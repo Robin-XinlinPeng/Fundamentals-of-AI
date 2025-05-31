@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财经新闻智能分析系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1a4b8c;
+            --secondary-blue: #3a7bd5;
+            --light-blue: #e6f0fa;
+            --accent-blue: #4da1ff;
+            --dark-blue: #0d2b4e;
+        }
+        body {
+            background: linear-gradient(120deg, #f0f7ff, #f8fbff);
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        .navbar {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 3rem 0 4rem;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        .ai-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .ai-avatar i {
+            color: var(--primary-blue);
+            font-size: 2.8rem;
+        }
+        .input-group {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+            border-radius: 50px;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-control {
+            border: none;
+            padding: 1.2rem 1.8rem;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.95);
+        }
+        .form-control:focus {
+            box-shadow: none;
+            background: white;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(58, 123, 213, 0.35);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        .response-card {
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+        .report-card {
+            background: white;
+            padding: 0;
+        }
+        .report-preview {
+            padding: 2rem;
+            text-align: center;
+        }
+        .report-icon {
+            font-size: 3.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 1.5rem;
+        }
+        .report-link {
+            display: inline-block;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        .report-link:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--accent-blue);
+        }
+        .feature-card {
+            height: 100%;
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+        }
+        .feature-title {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .footer {
+            background: var(--dark-blue);
+            color: rgba(255,255,255,0.85);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-radius: 20px 20px 0 0;
+        }
+        .loading-spinner {
+            display: none;
+            font-size: 3.5rem;
+            color: var(--accent-blue);
+            margin: 1rem 0;
+        }
+        .success-response {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .info-response {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .report-container {
+            max-height: 500px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin: 1.5rem 0;
+        }
+        .report-frame {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-chart-line me-2"></i>ROBIN 财经新闻
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="hero-section text-center">
+        <div class="container">
+            <div class="ai-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1 class="display-5 fw-bold mb-3">智能财经新闻查询</h1>
+            <p class="lead mb-4">输入年份和国家（地区），获取当年财经事件与金融知识点分析</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="input-group mb-3">
+                        <input type="text" id="userInput" class="form-control" 
+                               placeholder="例如：2023年中国经济情况、德国2020年的财经事件..." 
+                               aria-label="财经查询">
+                        <button class="btn btn-primary" type="button" id="analyzeBtn">
+                            <i class="fas fa-search me-2"></i>智能查询
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <div class="loading-spinner" id="loadingSpinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 响应区域 -->
+        <div class="row mb-4">
+            <div class="col-lg-10 mx-auto">
+                <div class="card response-card" id="responseCard">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-comments text-muted mb-3" style="font-size: 3rem;"></i>
+                        <p class="text-muted">输入查询内容，获取财经报道</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 报告预览区域 -->
+        <div class="row mb-5" id="reportSection" style="display: none;">
+            <div class="col-12">
+                <div class="card report-card">
+                    <div class="report-preview">
+                        <div class="report-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3 class="mb-3">您的财经报告已生成</h3>
+                        <p class="lead mb-4">点击下方链接查看完整报告</p>
+                        
+                        <div class="d-flex justify-content-center">
+                            <a id="reportLink" class="report-link" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>查看完整财经报告
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 功能特性 -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-asia"></i>
+                    </div>
+                    <h4 class="feature-title">全球覆盖</h4>
+                    <p>支持主要国家/地区的财经事件，包括中国、美国、德国、欧盟等</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4 class="feature-title">AI深度分析</h4>
+                    <p>自动提取关键知识点，解释财经概念，帮助您理解经济金融基础知识</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h4 class="feature-title">专业报告</h4>
+                    <p>生成精美专业的HTML报告，支持下载保存，方便后续查阅与分析</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p class="mb-0 text-center">&copy; 2025 ROBIN财经新闻 | DeepSeek-V3 API</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 处理分析按钮点击
+            $('#analyzeBtn').click(function() {
+                const userInput = $('#userInput').val().trim();
+                if (!userInput) {
+                    showResponse('请输入有效的查询内容', 'warning');
+                    return;
+                }
+                
+                // 显示加载动画
+                $('#loadingSpinner').show();
+                $('#responseCard').html(`
+                    <div class="card-body text-center p-4">
+                        <div class="text-primary" style="font-size: 3rem; margin-bottom: 1rem;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <h4 class="text-primary">正在分析中，请稍候...</h4>
+                    </div>
+                `);
+                
+                // 隐藏之前的报告
+                $('#reportSection').hide();
+                
+                // 发送请求到后端
+                $.ajax({
+                    type: 'POST',
+                    url: '/process',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ input: userInput }),
+                    success: function(response) {
+                        $('#loadingSpinner').hide();
+                        
+                        if (response.status === 'need_more_info') {
+                            showResponse(response.response, 'info');
+                        } 
+                        else if (response.status === 'success') {
+                            showResponse(`<span class="success-response">${response.preview}</span>`, 'success');
+                            
+                            // 显示报告链接
+                            $('#reportLink').attr('href', response.report_url);
+                            $('#reportSection').show();
+                            
+                            // 滚动到报告区域
+                            $('html, body').animate({
+                                scrollTop: $('#reportSection').offset().top - 100
+                            }, 800);
+                        } 
+                        else {
+                            showResponse(response.message || '处理请求时出错', 'error');
+                        }
+                    },
+                    error: function() {
+                        $('#loadingSpinner').hide();
+                        showResponse('服务器错误，请稍后再试', 'error');
+                    }
+                });
+            });
+            
+            // 显示响应消息
+            function showResponse(message, type) {
+                let icon = '';
+                let color = '';
+                
+                switch(type) {
+                    case 'success':
+                        icon = '<i class="fas fa-check-circle me-2"></i>';
+                        color = 'text-success';
+                        break;
+                    case 'info':
+                        icon = '<i class="fas fa-info-circle me-2"></i>';
+                        color = 'text-primary';
+                        break;
+                    case 'warning':
+                        icon = '<i class="fas fa-exclamation-triangle me-2"></i>';
+                        color = 'text-warning';
+                        break;
+                    case 'error':
+                        icon = '<i class="fas fa-times-circle me-2"></i>';
+                        color = 'text-danger';
+                        break;
+                    default:
+                        icon = '<i class="fas fa-comment me-2"></i>';
+                        color = 'text-muted';
+                }
+                
+                $('#responseCard').html(`
+                    <div class="card-body text-center p-4">
+                        <div class="${color}" style="font-size: 3rem; margin-bottom: 1rem;">
+                            ${icon}
+                        </div>
+                        <h4>${message}</h4>
+                    </div>
+                `);
+            }
+            
+            // 按Enter键提交
+            $('#userInput').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#analyzeBtn').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
