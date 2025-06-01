@@ -178,7 +178,7 @@ def generate_html_report(report_data: dict) -> str:
                     """
             else:
                 html += """
-                <div class="alert alert-light w-100" style="background-color:#fff0f5;">
+                <div class="alert alert-light w-100">
                     暂无相关金融知识点分析
                 </div>
                 """
