@@ -108,7 +108,6 @@ class FinGenerater:
         )
 
 
-
         # 新闻搜索和重排序agent
         self.news_agent = ChatAgent(
             system_message="你是一个财经新闻筛选专家，要找出和{year}年{area}财经新闻最相关的2条结果，保存他们的标题、内容，严格以json格式输出",
